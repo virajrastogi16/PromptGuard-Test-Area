@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Test Area</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        #chat-history { border: 1px solid #ccc; padding: 20px; height: 300px; overflow-y: auto; margin-bottom: 20px; border-radius: 8px; }
+        .message { margin-bottom: 15px; padding: 10px; border-radius: 5px; }
+        .user-msg { background-color: #e3f2fd; }
+        .ai-msg { background-color: #f5f5f5; }
+        .input-area { display: flex; gap: 10px; }
+        textarea { flex-grow: 1; padding: 10px; resize: none; height: 50px; border-radius: 8px; border: 1px solid #ccc; }
+        button { padding: 0 20px; background-color: #0b57d0; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>PromptGuard Test Environment</h2>
+    <div id="chat-history"></div>
+
+    <div class="input-area">
+        <textarea id="prompt-input" placeholder="Type your message here..."></textarea>
+        <!-- The aria-label is set so PromptGuard's mouse click listener catches it -->
+        <button id="send-button" aria-label="Send message">Send</button>
+    </div>
+
+    <script>
+        const input = document.getElementById('prompt-input');
+        const sendBtn = document.getElementById('send-button');
+        const chatHistory = document.getElementById('chat-history');
+
+        function appendMessage(sender, text, className) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${className}`;
+            msgDiv.innerHTML = `<strong>${sender}:</strong> <span>${text}</span>`;
+            chatHistory.appendChild(msgDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function handleSend() {
+            const text = input.value;
+            if (!text.trim()) return;
+
+            // 1. Add user message to screen
+            appendMessage('You', text, 'user-msg');
+            
+            // 2. Clear the box
+            input.value = '';
+
+            // 3. Simulate AI processing delay and response
+            setTimeout(() => {
+                appendMessage('AI', `I received your prompt: "${text}". How can I help further?`, 'ai-msg');
+            }, 800);
+        }
+
+        // Listeners for the dummy site
+        sendBtn.addEventListener('click', handleSend);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+    </script>
+</body>
+</html>
